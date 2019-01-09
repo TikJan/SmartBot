@@ -5,11 +5,6 @@ const carousel = require('./carusel');
 
 const RoomService = require('./../../api/components/rooms/service');
 
-
-
-
-
-
 const lib = new builder.Library('room-selection');
 
 

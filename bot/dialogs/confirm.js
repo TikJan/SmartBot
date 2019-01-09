@@ -1,7 +1,8 @@
 const builder = require('botbuilder');
-
 const lib = new builder.Library('confirm');
 
+
+const OrdersService = require('./../../services/orders');
 
 
 lib.dialog('/', [
@@ -30,7 +31,7 @@ lib.dialog('/', [
         if(results.response){
             session.replaceDialog('comment')
         }else {
-            session.beginDialog(':/');
+            session.endDialog('Try again');
         }
     }
 ]);
@@ -73,22 +74,29 @@ lib.dialog('order', [
         let order = {
             hotel : global.Hotel,
             room : global.Room,
+            roomId: global.RoomId,
             startDate : global.StartDate,
             endDate : global.EndDate,
             username : global.Username,
-            phone : global.Phone
+            phone : global.Phone,
+            comment : global.Comment || ''
         };
-        console.log('_____________________________________');
-        console.log(order);
-        console.log('_____________________________________');
-        global.Hotel = undefined;
-        global.Room = undefined;
-        global.StartDate = undefined;
-        global.EndDate = undefined;
-        global.Comment = undefined;
-        global.Username = undefined;
-        global.Phone = undefined;
-        session.beginDialog(":/");
+        OrdersService.createOrder(order)
+            .then(data => {
+                global.Hotel = undefined;
+                global.Room = undefined;
+                global.StartDate = undefined;
+                global.EndDate = undefined;
+                global.Comment = undefined;
+                global.Username = undefined;
+                global.Phone = undefined;
+                session.endDialog('Your order has been created');
+            })
+            .catch(err => {
+                console.log(err);
+                session.beginDialog('/');
+            })
+
     }
 ]);
 

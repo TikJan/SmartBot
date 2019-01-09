@@ -8,13 +8,9 @@ function getHotels() {
         HotelService.getAllHotels()
         .then(hotels => {
             for(let i = 0; i < hotels.length; ++i) {
-                let stars = '';
-                for (let j = 0; j < hotels[i].stars; ++j) {
-                    stars += '*';
-                }
                 l.push({
                     title: hotels[i].name,
-                    subtitle: stars,
+                    subtitle: hotels[i].stars + ' stars',
                     url: hotels[i].photourl,
                     alt: hotels[i].id
                 });

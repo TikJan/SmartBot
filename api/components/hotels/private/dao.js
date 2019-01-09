@@ -7,7 +7,7 @@ class Dao {
         return new Promise((resolve, reject) => {
             let query = `SELECT * 
                          FROM hotels
-                         ORDER BY stars;`;
+                         ORDER BY stars desc;`;
 
             SQL.query(query)
                 .then(hotels => resolve(hotels))

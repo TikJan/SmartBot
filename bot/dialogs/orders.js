@@ -13,7 +13,7 @@ lib.dialog('/', [
         args = args || {};
 
         if (localizedRegex(session, ['YES']).test(session.message.text)) {
-            return session.beginDialog('orders:/get-orders');
+            return session.beginDialog('/get-username');
         }
         if (localizedRegex(session, ['NO']).test(session.message.text)) {
             return session.beginDialog(':/');
@@ -36,6 +36,24 @@ lib.dialog('/', [
     }
 ]);
 
+let username;
+
+
+
+
+lib.dialog('/get-username', [
+    (session, args) => {
+        args = args || {};
+        let promptMessage = 'Please enter your name and surname';
+
+        builder.Prompts.text(session, promptMessage);
+
+    },
+    (session, results) => {
+        username = results.response;
+        return session.beginDialog('/get-orders');
+    }
+]);
 
 lib.dialog('/get-orders', [
     (session, args) => {
@@ -51,10 +69,9 @@ lib.dialog('/get-orders', [
 
         const order = require('./../../services/orders');
 
-        order()
+        order.getOrders(username)
             .then(orders => {
-
-
+                username = undefined;
                 session.send(new builder.Message(session)
                     .attachmentLayout(builder.AttachmentLayout.carousel)
                     .attachments(carousel.create(orders))
@@ -76,8 +93,6 @@ lib.dialog('/get-orders', [
                 console.log(err);
                 return session.beginDialog(':/');
             });
-
-
 
     },
     (session, results) => {
