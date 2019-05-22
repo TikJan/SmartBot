@@ -1,10 +1,9 @@
 const builder = require('botbuilder');
 const carousel = require('./carusel');
-const hotel = require('../../services/hotels');
-const HotelService = require('./../../api/components/hotels/service');
+const HotelService = require('../../services/hotels');
 
 let hotels;
-hotel()
+HotelService.getHotels()
     .then(data => {
         hotels = data
     })

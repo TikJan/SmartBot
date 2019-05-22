@@ -3,7 +3,7 @@ const carousel = require('./carusel');
 
 
 
-const RoomService = require('./../../api/components/rooms/service');
+const RoomService = require('./../../services/rooms');
 
 const lib = new builder.Library('room-selection');
 
@@ -16,9 +16,8 @@ lib.dialog('/', [
             return session.beginDialog('start-date:/');
         } else {
 
-            const room = require('./../../services/rooms');
 
-            room(global.HotelId)
+            RoomService.getRooms(global.Hotel)
                 .then(rooms => {
 
                     builder.Prompts.text(session, promptMessage);
@@ -37,7 +36,7 @@ lib.dialog('/', [
         global.Room = results.response;
         RoomService.getRoomIdByName(results.response, global.HotelId)
             .then(id => {
-                global.RoomId = id[0].id;
+                global.RoomId = id;
             })
             .catch(err => {
                 console.log(err);

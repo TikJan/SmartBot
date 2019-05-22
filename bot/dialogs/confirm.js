@@ -90,10 +90,15 @@ lib.dialog('order', [
                 global.Comment = undefined;
                 global.Username = undefined;
                 global.Phone = undefined;
-                session.endDialog('Your order has been created');
+                // builder.Prompts.text(session, );
+                session.endConversation('Your order has been booked');
+                session.endConversation('Your order has been booked');
+
+                return
             })
             .catch(err => {
                 console.log(err);
+
                 session.beginDialog('/');
             })
 

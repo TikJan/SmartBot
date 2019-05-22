@@ -26,6 +26,14 @@ global.RoomId;
 
 let bot = new builder.UniversalBot(connector, session => {
 
+    global.Hotel = undefined;
+    global.Room = undefined;
+    global.StartDate = undefined;
+    global.EndDate = undefined;
+    global.Comment = undefined;
+    global.Username = undefined;
+    global.Phone = undefined;
+
     if (localizedRegex(session, ['New Order']).test(session.message.text)) {
         return session.beginDialog('hotel-selection:/');
     }
@@ -35,10 +43,13 @@ let bot = new builder.UniversalBot(connector, session => {
     if (localizedRegex(session, ['Help']).test(session.message.text)) {
         return session.beginDialog('help:/');
     }
+    if (localizedRegex(session, ['Write']).test(session.message.text)) {
+        return session.beginDialog('writer:/');
+    }
 
     let welcomeCard = new builder.HeroCard(session)
         .title('Welcome to IKM Smart bot')
-        .subtitle('Select your action')
+        .subtitle('Select your action or type your wishes')
         .images([
             new builder.CardImage(session)
                 .url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/YSU_gerb.jpg/220px-YSU_gerb.jpg')
@@ -47,6 +58,7 @@ let bot = new builder.UniversalBot(connector, session => {
         .buttons([
             builder.CardAction.imBack(session, session.gettext('New Order'), 'New Order'),
             builder.CardAction.imBack(session, session.gettext('My Orders'), 'My Orders'),
+            builder.CardAction.imBack(session, session.gettext('Write'), 'Write Order'),
             builder.CardAction.imBack(session, session.gettext('Help'), 'Help')
         ]);
     session.send(new builder.Message(session)
@@ -73,18 +85,21 @@ function localizedRegex(session, localeKeys) {
     return regex;
 }
 
+function a() {
 
-bot.on('conversationUpdate', (message) => {
-    console.log('covers Update');
-    if (message.membersAdded) {
-        message.membersAdded.forEach((identity) => {
-            if (identity.id === message.address.bot.id) {
-                bot.beginDialog(message.address, '/');
-            }
-        });
-    }
-});
 
+    bot.on('conversationUpdate', (message) => {
+        console.log('covers Update');
+        if (message.membersAdded) {
+            message.membersAdded.forEach((identity) => {
+                if (identity.id === message.address.bot.id) {
+                    bot.beginDialog(message.address, '/');
+                }
+            });
+        }
+    });
+}
+a();
 
 bot.library(require('./dialogs/orders').createLibrary());
 bot.library(require('./dialogs/help').createLibrary());
@@ -94,6 +109,7 @@ bot.library(require('./dialogs/startDate').createLibrary());
 bot.library(require('./dialogs/endDate').createLibrary());
 bot.library(require('./dialogs/confirm').createLibrary());
 bot.library(require('./dialogs/user').createLibrary());
+bot.library(require('./dialogs/writer').createLibrary());
 
 
 

@@ -14,7 +14,7 @@ let bot = require('./bot/index');
 app.post('/api/messages', bot.listen());
 
 
-let port = 4000;
+let port = 3000;
 app.listen(port, () => {
     console.log('Web Server listening on port %s', port);
 });

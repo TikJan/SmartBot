@@ -9,7 +9,7 @@ lib.dialog('/', [
     (session, args) => {
         args = args || {};
         if (global.EndDate) {
-            return session.beginDialog('confirm:/');
+            return session.beginDialog('user:/');
         } else {
             let promptMessage = 'Please enter the day you want to finish your order';
 

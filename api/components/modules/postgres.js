@@ -2,10 +2,10 @@ const { Pool, Client } = require('pg');
 
 let dbConfig = {
     DB: {
-        user: 'tigranvardanyan',
+        user: 'postgres',
         host: "127.0.0.1",
-        database: "kursayin",
-        password: "",
+        database: "postgres",
+        password: "19tigran98",
         port: 5432,
     }
 };

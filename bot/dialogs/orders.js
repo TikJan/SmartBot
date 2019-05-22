@@ -8,40 +8,40 @@ let lib = new builder.Library('orders');
 
 
 
-lib.dialog('/', [
-    (session, args) => {
-        args = args || {};
-
-        if (localizedRegex(session, ['YES']).test(session.message.text)) {
-            return session.beginDialog('/get-username');
-        }
-        if (localizedRegex(session, ['NO']).test(session.message.text)) {
-            return session.beginDialog(':/');
-        }
-
-
-        let Card = new builder.HeroCard(session)
-            .title('Do you want to get your active orders?')
-            .buttons([
-                builder.CardAction.imBack(session, session.gettext('YES'), "YES"),
-                builder.CardAction.imBack(session, session.gettext('NO'), 'NO')
-            ]);
-        session.send(new builder.Message(session)
-            .addAttachment(Card));
-
-    },
-    (session, results) => {
-        return session.endDialog();
-        // return session.beginDialog(':/');
-    }
-]);
+// lib.dialog('/', [
+//     (session, args) => {
+//         args = args || {};
+//
+//         if (localizedRegex(session, ['YES']).test(session.message.text)) {
+//             return session.beginDialog('/get-username');
+//         }
+//         if (localizedRegex(session, ['NO']).test(session.message.text)) {
+//             return session.beginDialog(':/');
+//         }
+//
+//
+//         let Card = new builder.HeroCard(session)
+//             .title('Do you want to get your active orders?')
+//             .buttons([
+//                 builder.CardAction.imBack(session, session.gettext('YES'), "YES"),
+//                 builder.CardAction.imBack(session, session.gettext('NO'), 'NO')
+//             ]);
+//         session.send(new builder.Message(session)
+//             .addAttachment(Card));
+//
+//     },
+//     (session, results) => {
+//         return session.endDialog();
+//         // return session.beginDialog(':/');
+//     }
+// ]);
 
 let username;
 
 
 
 
-lib.dialog('/get-username', [
+lib.dialog('/', [
     (session, args) => {
         args = args || {};
         let promptMessage = 'Please enter your name and surname';
@@ -61,7 +61,10 @@ lib.dialog('/get-orders', [
 
 
         if (localizedRegex(session, ['Go Back']).test(session.message.text)) {
-            return session.beginDialog(':/');
+            session.clearDialogStack()
+
+            session.beginDialog('/');
+            return
         }
         if (localizedRegex(session, ['help']).test(session.message.text)) {
             return session.beginDialog('help:/');
@@ -91,13 +94,14 @@ lib.dialog('/get-orders', [
             .catch(err => {
                 builder.Prompts.text(session, 'You have no orders');
                 console.log(err);
-                return session.beginDialog(':/');
+                session.replaceDialog('/');
+                return;
             });
 
     },
     (session, results) => {
         global.StartDate = results.response.entity;
-        return session.beginDialog(':/');
+        return session.replaceDialog('/');
     }
 ]);
 

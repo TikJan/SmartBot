@@ -3,19 +3,18 @@ const SQL = require('./../../modules/postgres');
 
 class Dao {
 
-    getAllRoomTypes(id) {
+    getAllRoomTypes(name) {
         return new Promise((resolve, reject) => {
-            let query = `SELECT * 
-                         FROM public."roomtype"
-                         WHERE "hotelid" = ${id};`;
-            console.log('___________________________________________');
-            console.log(query);
-            SQL.query(query)
+            let query = `SELECT rt.name, r.info, r.avatar, r.id
+                            FROM rooms r
+                            LEFT JOIN room_type rt on rt.id = r.roomtypeid
+                            RIGHT JOIN hotels h on r.hotelid = h.id
+                            WHERE h.name = $1;`;
+            SQL.query(query, [name])
                 .then(rooms => {
                     return resolve(rooms);
                 })
                 .catch(err => {
-                    console.log('___________________________________________');
                     console.log(err);
                     return reject(err);
                 });
@@ -23,13 +22,13 @@ class Dao {
     };
 
 
-    getRoomIdByName(name, id) {
+    getRoomIdByName(name) {
         return new Promise((resolve, reject) => {
             let query = `SELECT id
-                            FROM roomtype
-                            WHERE name=$1 and "hotelid"=$2`;
+                            FROM room_type
+                            WHERE name = $1;`;
 
-            SQL.query(query, [name, id])
+            SQL.query(query, [name])
                 .then(data => {
                     return resolve(data);
                 })
